@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">CipherB</string>
+    <string name="wbaes_test">白盒AES加密</string>
+    <string name="wb_encrypt_string">加密字符串</string>
+    <string name="wb_encrypt_file">加密文件</string>
+    <string name="wb_http">加密HTTP请求</string>
+    <string name="wb_qrcode_app">二维码应用</string>
+    <string name="key_distribution">密钥分发</string>
+    <string name="performance_comparison">加密性能对比</string>
+    <string name="advanced_settings">高级设置</string>
+    <string name="generic_aes">朴素AES</string>
+    <string name="key_management">密钥管理</string>
+    <string name="about">关于</string>
+    <string name="key_server_url">密钥服务器地址</string>
+    <string name="token">token值</string>
+    <string name="iv">iv值</string>
+    <string name="id">id值</string>
+    <string name="plain_text">需要加密的明文</string>
+    <string name="ciphertext">白盒AES加密后的密文</string>
+    <string name="encrypt">加密</string>
+    <string name="temp_iv">临时IV值：</string>
+    <string name="force_update">强制检查密钥更新</string>
+    <string name="need_url_and_id">请到高级设置中设置密钥服务器地址和id值！</string>
 </resources>

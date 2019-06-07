@@ -1,0 +1,19 @@
+<com.google.android.material.appbar.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="1dp"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+</com.google.android.material.appbar.AppBarLayout>
+
+
+

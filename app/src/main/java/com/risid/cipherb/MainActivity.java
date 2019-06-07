@@ -1,120 +1,85 @@
 package com.risid.cipherb;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.risid.wbaes.AES;
-import com.risid.wbaes.State;
-import com.risid.wbaes.generator.ExternalBijections;
-import com.risid.wbaes.generator.Generator;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.util.Arrays;
+import com.trello.rxlifecycle3.components.RxActivity;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-import static com.risid.wbaes.AESEncrypt.pkcs5PaddingBytes;
-import static com.risid.wbaes.AESEncrypt.xor;
-import static org.bouncycastle.pqc.math.linearalgebra.ByteUtils.toHexString;
+public class MainActivity extends RxActivity {
 
-public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.tv_test)
-    TextView tvTest;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.ll_encrypt_string)
+    LinearLayout llEncryptString;
+    @BindView(R.id.ll_encrypt_file)
+    LinearLayout llEncryptFile;
+    @BindView(R.id.ll_encrypt_http)
+    LinearLayout llEncryptHttp;
+    @BindView(R.id.ll_encrypt_qrcode)
+    LinearLayout llEncryptQrcode;
+    @BindView(R.id.ll_key_distribution)
+    LinearLayout llKeyDistribution;
+    @BindView(R.id.ll_key_management)
+    LinearLayout llKeyManagement;
+    @BindView(R.id.ll_generic_aes)
+    LinearLayout llGenericAes;
+    @BindView(R.id.ll_performance_comparison)
+    LinearLayout llPerformanceComparison;
+    @BindView(R.id.ll_advanced_settings)
+    LinearLayout llAdvancedSettings;
+    @BindView(R.id.ll_info)
+    LinearLayout llInfo;
+    @BindView(R.id.gl_main)
+    GridLayout glMain;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        InputStream is = null;
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
+
+        toolbar.setTitle(R.string.wbaes_test);
 
 
-        AES AESenc = null;
-        try {
-            is = this.getResources().getAssets().open("aes-table");
-            ObjectInputStream in = new ObjectInputStream(is);
-            try {
-                AESenc = (AES) in.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            byte[] bytes = new byte[is.available()];
-            is.read(bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+
+
+    }
+
+
+    @OnClick({R.id.ll_encrypt_string, R.id.ll_encrypt_file, R.id.ll_encrypt_http, R.id.ll_encrypt_qrcode, R.id.ll_key_distribution, R.id.ll_key_management, R.id.ll_generic_aes,
+            R.id.ll_performance_comparison, R.id.ll_advanced_settings, R.id.ll_info})
+    public void onViewClicked(View view) {
+        Intent intent = new Intent();
+        switch (view.getId()) {
+            case R.id.ll_advanced_settings:
+                intent.setClass(getApplicationContext(), SettingsActivity.class);
+                break;
+            case R.id.ll_performance_comparison:
+                intent.setClass(getApplicationContext(), PerfCompActivity.class);
+                break;
+            case R.id.ll_encrypt_string:
+                intent.setClass(getApplicationContext(), EncryptStringActivity.class);
+                break;
+
+            default:
+                Toast.makeText(this, "未实现！", Toast.LENGTH_SHORT).show();
+                return;
         }
-
-
-        byte[] content = "asdfkljasdlf;jwerfojasdflkasjdf;asdf".getBytes();
-
-        byte[] iv =  { 0x32, 0x30, 0x31, 0x35, 0x30, 0x30, 0x32, 0x30, 0x34, 0x34, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
-
-
-
-        int diff = 16 - content.length % 16;
-        int cbcCounter = (content.length / 16 ) + 1;
-
-        // 最后一组恰好16位
-        if (diff == 0){
-            cbcCounter++;
-        }
-        byte paddingByte = pkcs5PaddingBytes[diff - 1];
-
-        byte[] enc = new byte[cbcCounter * 16];
-
-        // cbc分组
-        byte[] enTemp;
-
-        byte[] cbcTemp = iv.clone();
-        for (int i = 0; i < cbcCounter; i++) {
-
-            // 最后一组
-            if (i == cbcCounter - 1){
-
-                enTemp = new byte[16];
-                for (int j = 0; j < 16; j++) {
-                    if (j < 16-diff){
-                        enTemp[j] = content[i*16+j];
-
-                    }else {
-                        enTemp[j] = paddingByte;
-                    }
-                }
-
-            }else {
-                enTemp = Arrays.copyOfRange(content, i*16, i*16 + 16);
-            }
-
-
-            byte[] ints = xor(enTemp, cbcTemp);
-
-            State state  = new State(ints, true,  false);
-            state.transpose();
-
-            AESenc.crypt(state);
-
-            cbcTemp = state.getStateCopy();
-
-
-            for (int j = 0; j < 16; j++) {
-                enc[i*16 + j] = cbcTemp[j];
-            }
-
-
-
-        }
-        Toast.makeText(this, toHexString(enc), Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 }
