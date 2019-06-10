@@ -15,15 +15,22 @@
     <string name="token">token值</string>
     <string name="iv">iv值</string>
     <string name="id">id值</string>
-    <string name="plain_text">需要加密的明文</string>
-    <string name="ciphertext">白盒AES加密后的密文</string>
+    <string name="plain_text">明文：</string>
+    <string name="ciphertext">密文：</string>
     <string name="encrypt">加密</string>
     <string name="temp_iv">临时IV值：</string>
     <string name="force_update">强制检查密钥更新</string>
     <string name="need_url_and_id">请到高级设置中设置密钥服务器地址和id值！</string>
     <string name="iv_padding">使用当前时间补齐IV</string>
-    <string name="byte_string">输入的是Base64</string>
-    <string name="cipher_ascii">密文展示为ASCII</string>
+    <string name="cipher_ascii">ASCII</string>
     <string name="copy_cipher">复制</string>
-    <string name="to_base64">转为Base64编码</string>
+    <string name="to_base64">Base64编码</string>
+    <string name="decrypt">解密</string>
+    <string name="to_byte_string">字节数组的字符串表示</string>
+    <string name="key_value">密钥值：</string>
+    <string name="input_byte_array">输入的是字节数组</string>
+    <string name="raw">欲发送的参数（以raw格式, 例如：id=3）</string>
+    <string name="encrypted_request">加密后的请求参数：</string>
+    <string name="list_decrypted">服务器解密后获得的参数列表：</string>
+    <string name="send_encrypted_request">发送加密的http请求</string>
 </resources>

@@ -40,12 +40,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
+import static com.risid.cipherb.AESUtil.ivSetter;
 import static com.risid.cipherb.AESUtil.readAESTable;
 import static com.risid.cipherb.AESUtil.toHexString;
 import static com.risid.cipherb.AESUtil.whiteBoxAESEncrypt;
 
 public class EncryptStringActivity extends RxActivity {
     SpUtil spUtil;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.et_iv)
@@ -87,6 +89,9 @@ public class EncryptStringActivity extends RxActivity {
     }
 
     private void initView() {
+
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         RxView.clicks(btCheckKey)
                 .compose(bindToLifecycle())
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
@@ -304,14 +309,11 @@ public class EncryptStringActivity extends RxActivity {
             return null;
         }
 
-        Calendar calendar = Calendar.getInstance(Locale.CHINA);
-
         if (aes == null) {
 
             aes = readAESTable(getApplicationContext());
         }
 
-        SimpleDateFormat ivTime = new SimpleDateFormat("yyyyMMddHH", Locale.CHINA);
         byte[] plainBytes;
 
         if (cbByteString.isChecked()){
@@ -322,43 +324,20 @@ public class EncryptStringActivity extends RxActivity {
 
 
 
-        byte[] iv = new byte[16];
 
         if (etIv.getText() != null) {
-            String ivStr = etIv.getText().toString();
-
-            if (etIv.length() == 16) {
-                iv = ivStr.getBytes();
-            } else {
-                iv = new byte[16];
-                if (ivStr.length() > 16) {
-                    for (int i = 0; i < 16; i++) {
-                        iv[i] = ivStr.getBytes()[i];
-                    }
-                } else {
-                    for (int i = 0; i < ivStr.length(); i++) {
-                        iv[i] = ivStr.getBytes()[i];
-                    }
-                    if(cbIvPadding.isChecked()){
-                        String time = String.valueOf(ivTime.format(calendar.getTime()));
-
-                        // 缺多少补多少
-                        for (int i = 0; i < time.length() - ivStr.length(); i++) {
-                            // 逆置
-                            iv[ivStr.length() + i] = time.getBytes()[time.length() - 1 - i];
-                        }
-                    }
-
-                }
 
 
-            }
+
+            byte[] iv = ivSetter(etIv.getText().toString(), cbIvPadding.isChecked());
+
+            return ArrayUtils.toObject(whiteBoxAESEncrypt(aes, plainBytes, iv));
 
 
+        }else {
+            return null;
         }
 
-
-        return ArrayUtils.toObject(whiteBoxAESEncrypt(aes, plainBytes, iv));
 
 
 

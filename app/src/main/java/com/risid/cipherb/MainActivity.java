@@ -75,7 +75,12 @@ public class MainActivity extends RxActivity {
             case R.id.ll_encrypt_string:
                 intent.setClass(getApplicationContext(), EncryptStringActivity.class);
                 break;
-
+            case R.id.ll_generic_aes:
+                intent.setClass(getApplicationContext(), GenericAESActivity.class);
+                break;
+            case R.id.ll_encrypt_http:
+                intent.setClass(getApplicationContext(), EncryptHTTPActivity.class);
+                break;
             default:
                 Toast.makeText(this, "未实现！", Toast.LENGTH_SHORT).show();
                 return;

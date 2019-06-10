@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
                     android:id="@+id/cb_byte_string"
-                    android:text="@string/byte_string"/>
+                    android:text="@string/to_base64"/>
             </LinearLayout>
             <LinearLayout
                 style="@style/LayoutList">

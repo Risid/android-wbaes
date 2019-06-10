@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GenericAESActivity">
+    tools:context=".EncryptHTTPActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -27,13 +27,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="30dp"
 
+                    android:textColor="@color/colorPrimaryDark"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:id="@+id/bt_check_key"
+                    android:text="@string/force_update"/>
                 <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="30dp">
+                    android:layout_height="wrap_content">
                     <ProgressBar
                         android:layout_width="20dp"
                         android:layout_height="20dp"
@@ -42,23 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:id="@+id/bt_encrypt"
-                        android:text="@string/encrypt"/>
-
-                </FrameLayout>
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <ProgressBar
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:id="@+id/pb_decrypt"/>
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_gravity="end"
-                        android:id="@+id/bt_decrypt"
-                        android:text="@string/decrypt"/>
+                        android:text="@string/send_encrypted_request"/>
                 </FrameLayout>
             </LinearLayout>
             <LinearLayout
@@ -67,8 +58,8 @@
                 <TextView
                     style="@style/StrongText"
 
-                    android:textSize="20sp"
-                    android:text="@string/plain_text"/>
+                    android:textSize="18sp"
+                    android:text="@string/raw"/>
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
@@ -82,67 +73,9 @@
 
                     android:background="@drawable/order_edt_note_bg" />
 
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:layout_marginTop="20dp"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorAccent"
-                            android:id="@+id/cb_byte_string"
-                            android:text="@string/to_byte_string"/>
-
-                    </LinearLayout>
-
             </LinearLayout>
             <LinearLayout
                 style="@style/LayoutList">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/StrongText"
-
-                        android:textSize="20sp"
-                        android:layout_width="wrap_content"
-                        android:text="@string/key_value"/>
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_key"
-                        android:layout_width="match_parent"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:layout_height="40dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-
-
-                        android:textColor="@color/colorPrimaryDark"
-
-                        android:background="@drawable/order_edt_note_bg"
-                        />
-
-                </LinearLayout>
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:id="@+id/cb_key_string"
-                    android:text="@string/input_byte_array"/>
-            </LinearLayout>
-            <LinearLayout
-                style="@style/LayoutList">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -186,7 +119,7 @@
                 <TextView
                     style="@style/StrongText"
                     android:textSize="20sp"
-                    android:text="@string/ciphertext"/>
+                    android:text="@string/encrypted_request"/>
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
@@ -199,23 +132,20 @@
                     android:textColor="@color/colorPrimaryDark"
 
                     android:background="@drawable/order_edt_note_bg" />
+            </LinearLayout>
 
-
-                <LinearLayout
+            <LinearLayout
+                style="@style/LayoutList">
+                <TextView
+                    style="@style/StrongText"
+                    android:textSize="20sp"
+                    android:text="@string/list_decrypted"/>
+                <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorAccent"
-                        android:id="@+id/cb_to_base64"
-                        android:text="@string/to_base64"/>
-
-
-                </LinearLayout>
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/et_response">
+                </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
 
 

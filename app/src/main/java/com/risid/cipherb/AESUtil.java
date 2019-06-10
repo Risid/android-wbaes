@@ -12,13 +12,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.risid.wbaes.AESEncrypt.pkcs5PaddingBytes;
 import static com.risid.wbaes.AESEncrypt.xor;
 
 public class AESUtil {
+
+    public static SimpleDateFormat ivTime = new SimpleDateFormat("yyyyMMddHH", Locale.CHINA);
+
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
+
 
     public static byte[] whiteBoxAESEncrypt(AES AESenc, byte[] content, byte[] iv){
         int diff = 16 - (content.length % 16);
@@ -129,6 +141,75 @@ public class AESUtil {
         }
         return byteArray;
     }
+
+    public static byte[] ivSetter(String ivStr, boolean padding) {
+
+        Calendar calendar = Calendar.getInstance(Locale.CHINA);
+
+        byte[] iv = new byte[16];
+
+        if (ivStr != null) {
+
+
+            if (ivStr.length() == 16) {
+                iv = ivStr.getBytes();
+            } else {
+                iv = new byte[16];
+                if (ivStr.length() > 16) {
+                    for (int i = 0; i < 16; i++) {
+                        iv[i] = ivStr.getBytes()[i];
+                    }
+                } else {
+                    for (int i = 0; i < ivStr.length(); i++) {
+                        iv[i] = ivStr.getBytes()[i];
+                    }
+                    if (padding) {
+                        String time = String.valueOf(ivTime.format(calendar.getTime()));
+
+                        // 缺多少补多少
+                        for (int i = 0; i < time.length() - ivStr.length(); i++) {
+                            // 逆置
+                            iv[ivStr.length() + i] = time.getBytes()[time.length() - 1 - i];
+                        }
+                    }
+
+                }
+
+
+            }
+        }
+        return iv;
+    }
+
+    public static byte[] genericEncrypt(byte[] srcData,byte[] key, byte[] iv)
+    {
+        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher;
+        try {
+            cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv));
+            return cipher.doFinal(srcData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static byte[] genericDecrypt(byte[] encData, byte[] key, byte[] iv)
+    {
+        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher;
+        try {
+            cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv));
+            return cipher.doFinal(encData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
 
 }
