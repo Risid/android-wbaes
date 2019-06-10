@@ -9,6 +9,7 @@ public class ApiManager {
 
     private RetrofitService orderApi;
     private static ApiManager sApiManager;
+    private String baseUrl;
 
     public static ApiManager getInstence() {
         if (sApiManager == null) {
@@ -21,13 +22,15 @@ public class ApiManager {
         return sApiManager;
     }
     public RetrofitService getOrderApi(String url) {
-        if (orderApi == null) {
+
+        if (orderApi == null || url.equals(baseUrl)) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             orderApi = retrofit.create(RetrofitService.class);
+            baseUrl = url;
         }
         return orderApi;
     }

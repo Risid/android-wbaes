@@ -25,61 +25,6 @@
             android:padding="20dp"
             android:orientation="vertical">
             <LinearLayout
-                style="@style/LayoutList">
-                <TextView
-                    style="@style/StrongText"
-
-                    android:textSize="20sp"
-                    android:text="@string/plain_text"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:minLines="5"
-                    android:padding="6dp"
-                    android:layout_marginTop="10dp"
-
-                    android:gravity="top"
-                    android:textColor="@color/colorPrimaryDark"
-
-                    android:background="@drawable/order_edt_note_bg" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/StrongText"
-
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:text="@string/temp_iv"/>
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
-                style="@style/LayoutList">
-                <TextView
-                    style="@style/StrongText"
-                    android:textSize="20sp"
-                    android:text="@string/ciphertext"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:minLines="5"
-                    android:padding="6dp"
-                    android:layout_marginTop="10dp"
-
-                    android:gravity="top"
-                    android:textColor="@color/colorPrimaryDark"
-
-                    android:background="@drawable/order_edt_note_bg" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -88,12 +33,144 @@
                     android:layout_height="50dp"
                     android:layout_gravity="end"
                     android:layout_marginEnd="30dp"
+
+                    android:textColor="@color/colorPrimaryDark"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:id="@+id/bt_check_key"
                     android:text="@string/force_update"/>
-                <com.google.android.material.button.MaterialButton
+                <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:text="@string/encrypt"/>
+                    android:layout_height="wrap_content">
+                    <ProgressBar
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:id="@+id/bt_encrypt"
+                        android:text="@string/encrypt"/>
+                </FrameLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                style="@style/LayoutList">
+                <TextView
+                    style="@style/StrongText"
+
+                    android:textSize="20sp"
+                    android:text="@string/plain_text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:minLines="5"
+                    android:padding="6dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/et_plain_text"
+
+                    android:gravity="top"
+                    android:textColor="@color/colorPrimaryDark"
+
+                    android:background="@drawable/order_edt_note_bg" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/cb_byte_string"
+                    android:text="@string/byte_string"/>
+            </LinearLayout>
+            <LinearLayout
+                style="@style/LayoutList">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/StrongText"
+
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:text="@string/temp_iv"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_iv"
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:layout_height="40dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+
+
+                        android:textColor="@color/colorPrimaryDark"
+
+                        android:background="@drawable/order_edt_note_bg"
+                        />
+
+                </LinearLayout>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/cb_iv_padding"
+                    android:text="@string/iv_padding"/>
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                style="@style/LayoutList">
+                <TextView
+                    style="@style/StrongText"
+                    android:textSize="20sp"
+                    android:text="@string/ciphertext"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:minLines="5"
+                    android:padding="6dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/et_cipher_text"
+
+                    android:gravity="top"
+                    android:textColor="@color/colorPrimaryDark"
+
+                    android:background="@drawable/order_edt_note_bg" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:id="@+id/cb_set_ascii"
+                        android:text="@string/cipher_ascii"/>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:id="@+id/cb_to_base64"
+                        android:text="@string/to_base64"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bt_copy_cipher"
+                        android:textColor="@color/colorPrimaryDark"
+                        app:backgroundTint="@color/colorPrimary"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/copy_cipher"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
 
 
         </LinearLayout>
