@@ -3,7 +3,9 @@ package com.risid.cipherb;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -28,6 +30,9 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.trello.rxlifecycle3.components.RxActivity;
 
+import cn.bertsir.zbar.QrConfig;
+import cn.bertsir.zbar.QrManager;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -48,6 +53,7 @@ import static com.risid.cipherb.AESUtil.ivSetter;
 import static com.risid.cipherb.AESUtil.toByteArray;
 import static com.risid.cipherb.AESUtil.toHexString;
 
+
 public class GenericAESActivity extends RxActivity {
 
     SpUtil spUtil;
@@ -56,6 +62,7 @@ public class GenericAESActivity extends RxActivity {
     byte[] cipher;
 
 
+    private QrConfig qrConfig;
     byte[] plain;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -96,31 +103,34 @@ public class GenericAESActivity extends RxActivity {
         initView();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            String scanResult = "";
-            if (resultCode == RESULT_OK) {
-                // 扫描得到二维码链接
-                IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-                if (intentResult != null) {
-                    if (intentResult.getContents() != null) {
-                        // ScanResult 为获取到的字符串
-                        scanResult = intentResult.getContents();
 
-                    }
-                }
-            }
-            if (!scanResult.equals("")) {
-                Toast.makeText(this, scanResult, Toast.LENGTH_SHORT).show();
-                Log.d("qrcode", scanResult);
+    private void scan(QrConfig qrConfig) {
+
+        QrManager.getInstance().init(qrConfig).startScan(GenericAESActivity.this, new QrManager.OnScanResultCallback() {
+            @Override
+            public void onScanSuccess(String scanResult) {
+
+                Toast.makeText(GenericAESActivity.this, scanResult, Toast.LENGTH_SHORT).show();
                 etCipherText.setText(scanResult);
                 cbToBase64.setChecked(false);
-                decrypt();
-            }
+                Byte[] bytes = decrypt();
+                if (bytes != null){
+                    plain = ArrayUtils.toPrimitive(bytes);
+                    Log.d("decrypted", toHexString(plain));
+                    if (!cbByteString.isChecked()) {
+                        etPlainText.setText(new String(plain));
+                    } else {
+                        etPlainText.setText(toHexString(plain));
+                    }
+                }else {
 
-        }
+                    Snackbar.make(slEncryptString, "解密错误", Snackbar.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
     }
     private void initView() {
 
@@ -141,14 +151,32 @@ public class GenericAESActivity extends RxActivity {
                     @Override
                     public void onNext(Object o) {
 
-                        if (ContextCompat.checkSelfPermission(GenericAESActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(GenericAESActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
-                        } else {
-                            Intent intent = new Intent(GenericAESActivity.this, CaptureActivity.class);
-
-
-                            startActivityForResult(intent, 0);
+                        if (etKey.getText() == null || TextUtils.isEmpty(etKey.getText())) {
+                            Snackbar.make(slEncryptString, "请填写密钥", Snackbar.LENGTH_SHORT).show();
+                            return;
                         }
+
+                        // TODO 二维码
+                        qrConfig = new QrConfig.Builder()
+                                .setDesText("扫描白盒AES产生的密文二维码")//扫描框下文字
+                                .setShowDes(true)//是否显示扫描框下面文字
+                                .setShowLight(true)//显示手电筒按钮
+                                .setShowTitle(true)//显示Title
+                                .setCornerColor(Color.parseColor("#E57373"))//设置扫描框颜色
+                                .setLineColor(Color.parseColor("#90CAF9"))//设置扫描线颜色
+                                .setLineSpeed(QrConfig.LINE_MEDIUM)//设置扫描线速度
+                                .setScanType(QrConfig.TYPE_QRCODE)//设置扫码类型（二维码，条形码，全部，自定义，默认为二维码）
+                                .setScanViewType(QrConfig.SCANVIEW_TYPE_QRCODE)//设置扫描框类型（二维码还是条形码，默认为二维码）
+                                .setCustombarcodeformat(QrConfig.BARCODE_EAN13)//此项只有在扫码类型为TYPE_CUSTOM时才有效
+                                .setPlaySound(true)//是否扫描成功后bi~的声音
+                                .setDingPath(R.raw.qrcode)//设置提示音(不设置为默认的Ding~)
+                                .setIsOnlyCenter(true)//是否只识别框中内容(默认为全屏识别)
+                                .setTitleText("扫描")//设置Tilte文字
+                                .setTitleBackgroudColor(Color.parseColor("#FFFFFF"))//设置状态栏颜色
+                                .setTitleTextColor(Color.parseColor("#E57373"))//设置Title文字颜色
+                                .create();
+                        scan(qrConfig);
+
 
                     }
 

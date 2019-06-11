@@ -58,7 +58,7 @@ import static com.risid.cipherb.AESUtil.whiteBoxAESEncrypt;
 import static com.risid.cipherb.FileUtil.readFile;
 import static com.risid.cipherb.FileUtil.writeToFile;
 
-public class EncryptedFileActivity extends RxActivity {
+public class EncryptFileActivity extends RxActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;

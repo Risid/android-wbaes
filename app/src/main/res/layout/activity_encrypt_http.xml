@@ -70,6 +70,7 @@
 
                     android:gravity="top"
                     android:textColor="@color/colorPrimaryDark"
+                    android:hint="@string/demo_send"
 
                     android:background="@drawable/order_edt_note_bg" />
 
@@ -140,12 +141,16 @@
                     style="@style/StrongText"
                     android:textSize="20sp"
                     android:text="@string/list_decrypted"/>
-                <androidx.recyclerview.widget.RecyclerView
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_marginTop="10dp"
+
+                    android:textColor="@color/colorPrimaryDark"
+
+                    android:background="@drawable/order_edt_note_bg"
                     android:id="@+id/et_response">
-                </androidx.recyclerview.widget.RecyclerView>
+                </EditText>
             </LinearLayout>
 
 

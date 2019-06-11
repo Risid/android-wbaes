@@ -29,6 +29,26 @@
         <item name="android:textColor">@color/colorAccent</item>
 
     </style>
+
+    <style name="NormalText">
+        <item name="android:textSize">20sp</item>
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+
+    </style>
+    <style name="SmallText">
+        <item name="android:textSize">18sp</item>
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">10dp</item>
+
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+
+    </style>
     <style name="GridLayout" >
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

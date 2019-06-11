@@ -7,7 +7,6 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.trello.rxlifecycle3.components.RxActivity;
@@ -82,11 +81,15 @@ public class MainActivity extends RxActivity {
                 intent.setClass(getApplicationContext(), EncryptHTTPActivity.class);
                 break;
             case R.id.ll_encrypt_file:
-                intent.setClass(getApplicationContext(), EncryptedFileActivity.class);
+                intent.setClass(getApplicationContext(), EncryptFileActivity.class);
                 break;
             case R.id.ll_encrypt_qrcode:
                 intent.setClass(getApplicationContext(), QrCodeActivity.class);
                 break;
+            case R.id.ll_info:
+                intent.setClass(getApplicationContext(), AboutActivity.class);
+                break;
+
             default:
                 Toast.makeText(this, "未实现！", Toast.LENGTH_SHORT).show();
                 return;

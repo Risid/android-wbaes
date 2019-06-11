@@ -22,6 +22,11 @@ public interface RetrofitService {
     @GET("generateAES")
     Observable<ResultBean> generateAES(@Query("id") String id, @Query("key") String key);
 
+
+    /** 生成密钥 */
+    @GET("encryptRequest")
+    Observable<ResultBean> encryptRequest(@Query("id") String id, @Query("data") String data);
+
     /** 下载密钥 */
     @GET("downloadAESTable")
     @Streaming
