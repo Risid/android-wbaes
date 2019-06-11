@@ -1,4 +1,4 @@
-package com.risid.cipherb;
+package com.risid.cipherb.bean;
 
 public class TestBean {
 

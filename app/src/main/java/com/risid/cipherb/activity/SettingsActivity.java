@@ -1,14 +1,15 @@
-package com.risid.cipherb;
+package com.risid.cipherb.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.risid.cipherb.R;
+import com.risid.cipherb.utils.SpUtil;
 import com.trello.rxlifecycle3.components.RxActivity;
 
 import butterknife.BindView;
@@ -43,6 +44,11 @@ public class SettingsActivity extends RxActivity {
 
     private void initView() {
         toolbar.setNavigationOnClickListener(v -> finish());
+
+
+        toolbar.setTitleTextColor(Color.parseColor("#757575"));
+
+        toolbar.setTitle(R.string.advanced_settings);
         getDataFromSp();
 
         RxTextView.textChanges(etUrl)

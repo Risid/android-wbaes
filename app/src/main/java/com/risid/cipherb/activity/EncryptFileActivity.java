@@ -1,4 +1,4 @@
-package com.risid.cipherb;
+package com.risid.cipherb.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,15 +16,12 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -32,10 +30,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.risid.cipherb.conf.ApiManager;
+import com.risid.cipherb.utils.FileUtil;
+import com.risid.cipherb.R;
+import com.risid.cipherb.bean.ResultBean;
+import com.risid.cipherb.utils.SpUtil;
 import com.risid.wbaes.AES;
 import com.trello.rxlifecycle3.components.RxActivity;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -51,12 +52,11 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
-import static com.risid.cipherb.AESUtil.ivSetter;
-import static com.risid.cipherb.AESUtil.readAESTable;
-import static com.risid.cipherb.AESUtil.toHexString;
-import static com.risid.cipherb.AESUtil.whiteBoxAESEncrypt;
-import static com.risid.cipherb.FileUtil.readFile;
-import static com.risid.cipherb.FileUtil.writeToFile;
+import static com.risid.cipherb.utils.AESUtil.ivSetter;
+import static com.risid.cipherb.utils.AESUtil.readAESTable;
+import static com.risid.cipherb.utils.AESUtil.whiteBoxAESEncrypt;
+import static com.risid.cipherb.utils.FileUtil.readFile;
+import static com.risid.cipherb.utils.FileUtil.writeToFile;
 
 public class EncryptFileActivity extends RxActivity {
 
@@ -116,6 +116,10 @@ public class EncryptFileActivity extends RxActivity {
     private void initView() {
 
         toolbar.setNavigationOnClickListener(v -> finish());
+
+        toolbar.setTitleTextColor(Color.parseColor("#757575"));
+
+        toolbar.setTitle(R.string.wb_encrypt_file);
 
         RxView.clicks(btChooseFile)
                 .compose(bindToLifecycle())

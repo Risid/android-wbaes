@@ -15,15 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AboutActivity"></activity>
-        <activity android:name=".QrCodeActivity" />
-        <activity android:name=".EncryptFileActivity" />
-        <activity android:name=".EncryptHTTPActivity" />
-        <activity android:name=".GenericAESActivity" />
-        <activity android:name=".EncryptStringActivity" />
-        <activity android:name=".PerfCompActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.KeyManageActivity"></activity>
+        <activity android:name=".activity.DistributeActivity" />
+        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.QrCodeActivity" />
+        <activity android:name=".activity.EncryptFileActivity" />
+        <activity android:name=".activity.EncryptHTTPActivity" />
+        <activity android:name=".activity.GenericAESActivity" />
+        <activity android:name=".activity.EncryptStringActivity" />
+        <activity android:name=".activity.PerfCompActivity" />
+        <activity android:name=".activity.SettingsActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

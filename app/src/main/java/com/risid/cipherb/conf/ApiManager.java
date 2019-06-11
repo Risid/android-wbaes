@@ -1,6 +1,7 @@
-package com.risid.cipherb;
+package com.risid.cipherb.conf;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.risid.cipherb.service.RetrofitService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

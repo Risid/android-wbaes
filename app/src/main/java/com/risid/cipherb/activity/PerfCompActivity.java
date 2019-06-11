@@ -1,7 +1,7 @@
-package com.risid.cipherb;
+package com.risid.cipherb.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -10,11 +10,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.button.MaterialButton;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.risid.cipherb.utils.AESUtil;
+import com.risid.cipherb.R;
+import com.risid.cipherb.bean.TestBean;
 import com.risid.wbaes.AES;
 import com.trello.rxlifecycle3.components.RxActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.risid.cipherb.AESUtil.readAESTable;
+import static com.risid.cipherb.utils.AESUtil.readAESTable;
 
 public class PerfCompActivity extends RxActivity {
 
@@ -118,6 +119,11 @@ public class PerfCompActivity extends RxActivity {
 
 
     private void initView() {
+
+        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.setTitleTextColor(Color.parseColor("#757575"));
+
+        toolbar.setTitle(R.string.performance_comparison);
 
         RxView.clicks(btEncrypt)
                 .compose(bindToLifecycle())

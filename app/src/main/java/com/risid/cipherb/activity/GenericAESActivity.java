@@ -1,11 +1,7 @@
-package com.risid.cipherb;
+package com.risid.cipherb.activity;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -18,16 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.journeyapps.barcodescanner.CaptureActivity;
+import com.risid.cipherb.R;
+import com.risid.cipherb.utils.SpUtil;
 import com.trello.rxlifecycle3.components.RxActivity;
 
 import cn.bertsir.zbar.QrConfig;
@@ -46,12 +39,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
-import static com.risid.cipherb.AESUtil.genericDecrypt;
-import static com.risid.cipherb.AESUtil.genericEncrypt;
-import static com.risid.cipherb.AESUtil.ivSetter;
-import static com.risid.cipherb.AESUtil.toByteArray;
-import static com.risid.cipherb.AESUtil.toHexString;
+import static com.risid.cipherb.utils.AESUtil.genericDecrypt;
+import static com.risid.cipherb.utils.AESUtil.genericEncrypt;
+import static com.risid.cipherb.utils.AESUtil.ivSetter;
+import static com.risid.cipherb.utils.AESUtil.toByteArray;
+import static com.risid.cipherb.utils.AESUtil.toHexString;
 
 
 public class GenericAESActivity extends RxActivity {
@@ -137,6 +129,10 @@ public class GenericAESActivity extends RxActivity {
 
 
         toolbar.setNavigationOnClickListener(v -> finish());
+
+        toolbar.setTitleTextColor(Color.parseColor("#757575"));
+
+        toolbar.setTitle(R.string.generic_aes);
 
 
         RxView.clicks(tvQrcode)

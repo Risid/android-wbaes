@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">CipherB</string>
     <string name="wbaes_test">白盒AES加密</string>
-    <string name="wb_encrypt_string">加密字符串</string>
-    <string name="wb_encrypt_file">加密文件</string>
-    <string name="wb_http">加密HTTP请求</string>
-    <string name="wb_qrcode_app">二维码应用</string>
-    <string name="key_distribution">密钥分发</string>
-    <string name="performance_comparison">加密性能对比</string>
-    <string name="advanced_settings">高级设置</string>
-    <string name="generic_aes">朴素AES</string>
-    <string name="key_management">密钥管理</string>
+    <string name="wb_encrypt_string">加密字符串(A)</string>
+    <string name="wb_encrypt_file">加密文件(A)</string>
+    <string name="wb_http">加密HTTP请求(A)</string>
+    <string name="wb_qrcode_app">二维码应用(A)</string>
+    <string name="key_distribution">密钥分发(S)</string>
+    <string name="performance_comparison">加密性能对比(T)</string>
+    <string name="advanced_settings">高级设置(T)</string>
+    <string name="generic_aes">朴素AES(T)</string>
+    <string name="key_management">密钥管理(S)</string>
     <string name="about">关于</string>
     <string name="key_server_url">密钥服务器地址</string>
     <string name="token">token值</string>
@@ -49,4 +49,9 @@
     <string name="demo_send"><![CDATA[id=&msg=hello]]></string>
     <string name="risid">©Risid 2019年毕业设计</string>
     <string name="license">许可协议：</string>
+    <string name="dev_key">开发者密钥：</string>
+    <string name="token_value">Token：</string>
+    <string name="key_id">密钥ID：</string>
+    <string name="update_id">更新该ID密钥</string>
+    <string name="distribute_key">分发该密钥</string>
 </resources>

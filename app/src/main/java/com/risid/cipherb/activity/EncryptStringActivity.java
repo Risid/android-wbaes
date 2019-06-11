@@ -1,11 +1,10 @@
-package com.risid.cipherb;
+package com.risid.cipherb.activity;
 
-import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -14,20 +13,19 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.journeyapps.barcodescanner.CaptureActivity;
+import com.risid.cipherb.conf.ApiManager;
+import com.risid.cipherb.utils.FileUtil;
+import com.risid.cipherb.R;
+import com.risid.cipherb.bean.ResultBean;
+import com.risid.cipherb.utils.SpUtil;
 import com.risid.wbaes.AES;
 import com.trello.rxlifecycle3.components.RxActivity;
 
@@ -46,11 +44,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
-import static com.risid.cipherb.AESUtil.ivSetter;
-import static com.risid.cipherb.AESUtil.readAESTable;
-import static com.risid.cipherb.AESUtil.toHexString;
-import static com.risid.cipherb.AESUtil.whiteBoxAESEncrypt;
+import static com.risid.cipherb.utils.AESUtil.ivSetter;
+import static com.risid.cipherb.utils.AESUtil.readAESTable;
+import static com.risid.cipherb.utils.AESUtil.toHexString;
+import static com.risid.cipherb.utils.AESUtil.whiteBoxAESEncrypt;
 
 public class EncryptStringActivity extends RxActivity {
     SpUtil spUtil;
@@ -102,6 +99,10 @@ public class EncryptStringActivity extends RxActivity {
     private void initView() {
 
         toolbar.setNavigationOnClickListener(v -> finish());
+
+        toolbar.setTitleTextColor(Color.parseColor("#757575"));
+
+        toolbar.setTitle(R.string.wb_encrypt_string);
 
         RxView.clicks(btCheckKey)
                 .compose(bindToLifecycle())

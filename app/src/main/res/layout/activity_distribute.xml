@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.QrCodeActivity">
+    tools:context=".activity.DistributeActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -25,40 +25,12 @@
             android:padding="20dp"
             android:orientation="vertical">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="30dp"
-
-                    android:textColor="@color/colorPrimaryDark"
-                    app:backgroundTint="@color/colorPrimary"
-                    android:id="@+id/bt_check_key"
-                    android:text="@string/force_update"/>
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <ProgressBar
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"/>
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:id="@+id/bt_encrypt"
-                        android:text="@string/generate_qrcode"/>
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
                 style="@style/LayoutList">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -66,9 +38,9 @@
 
                         android:textSize="20sp"
                         android:layout_width="wrap_content"
-                        android:text="@string/plain_text"/>
+                        android:text="@string/key_value"/>
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_plain_text"
+                        android:id="@+id/et_key"
                         android:layout_width="match_parent"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -83,11 +55,9 @@
                         />
 
                 </LinearLayout>
-
             </LinearLayout>
             <LinearLayout
                 style="@style/LayoutList">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -98,9 +68,9 @@
 
                         android:textSize="20sp"
                         android:layout_width="wrap_content"
-                        android:text="@string/temp_iv"/>
+                        android:text="@string/key_id"/>
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_iv"
+                        android:id="@+id/et_key_id"
                         android:layout_width="match_parent"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -115,41 +85,53 @@
                         />
 
                 </LinearLayout>
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:id="@+id/cb_iv_padding"
-                    android:text="@string/iv_padding"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    android:id="@+id/iv_qrcode"
-                    android:src="@color/colorAccent"
-                    android:layout_gravity="center"/>
 
+
+            <LinearLayout
+                style="@style/LayoutList">
                 <TextView
                     style="@style/StrongText"
-                    android:layout_gravity="center"
-                    android:textSize="16sp"
-                    android:layout_marginTop="20dp"
+                    android:textSize="20sp"
+                    android:text="@string/token_value"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:minLines="5"
+                    android:padding="6dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/et_token"
+
+                    android:gravity="top"
                     android:textColor="@color/colorPrimaryDark"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/tv_cipher"/>
+
+                    android:background="@drawable/order_edt_note_bg" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp">
+                        <ProgressBar
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/bt_distribute_key"
+                            android:text="@string/distribute_key"/>
+
+                    </FrameLayout>
+
+                </LinearLayout>
             </LinearLayout>
-
-
-
-
-
-
 
 
 

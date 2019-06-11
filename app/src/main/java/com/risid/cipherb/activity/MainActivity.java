@@ -1,4 +1,4 @@
-package com.risid.cipherb;
+package com.risid.cipherb.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.risid.cipherb.R;
 import com.trello.rxlifecycle3.components.RxActivity;
 
 import butterknife.BindView;
@@ -88,6 +89,12 @@ public class MainActivity extends RxActivity {
                 break;
             case R.id.ll_info:
                 intent.setClass(getApplicationContext(), AboutActivity.class);
+                break;
+            case R.id.ll_key_distribution:
+                intent.setClass(getApplicationContext(), DistributeActivity.class);
+                break;
+            case R.id.ll_key_management:
+                intent.setClass(getApplicationContext(), KeyManageActivity.class);
                 break;
 
             default:
