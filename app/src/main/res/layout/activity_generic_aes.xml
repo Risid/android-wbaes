@@ -68,6 +68,8 @@
                     style="@style/StrongText"
 
                     android:textSize="20sp"
+
+                    android:id="@+id/tv_qrcode"
                     android:text="@string/plain_text"/>
                 <EditText
                     android:layout_width="match_parent"

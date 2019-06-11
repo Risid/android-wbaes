@@ -1,39 +1,33 @@
 package com.risid.cipherb;
 
-import android.Manifest;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.journeyapps.barcodescanner.CaptureActivity;
 import com.risid.wbaes.AES;
 import com.trello.rxlifecycle3.components.RxActivity;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -46,63 +40,52 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 import static com.risid.cipherb.AESUtil.ivSetter;
 import static com.risid.cipherb.AESUtil.readAESTable;
 import static com.risid.cipherb.AESUtil.toHexString;
 import static com.risid.cipherb.AESUtil.whiteBoxAESEncrypt;
 
-public class EncryptStringActivity extends RxActivity {
-    SpUtil spUtil;
-
-    AES aes;
+public class QrCodeActivity extends RxActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.et_iv)
-    TextInputEditText etIv;
-    @BindView(R.id.sl_encrypt_string)
-    ScrollView slEncryptString;
-    @BindView(R.id.et_plain_text)
-    EditText etPlainText;
-    @BindView(R.id.et_cipher_text)
-    EditText etCipherText;
     @BindView(R.id.bt_check_key)
     MaterialButton btCheckKey;
     @BindView(R.id.bt_encrypt)
     MaterialButton btEncrypt;
-
-    @BindView(R.id.cb_byte_string)
-    CheckBox cbByteString;
+    @BindView(R.id.et_iv)
+    TextInputEditText etIv;
     @BindView(R.id.cb_iv_padding)
     CheckBox cbIvPadding;
-    @BindView(R.id.cb_set_ascii)
-    CheckBox cbSetAscii;
-    @BindView(R.id.cb_to_base64)
-    CheckBox cbToBase64;
-    @BindView(R.id.bt_copy_cipher)
-    MaterialButton btCopyCipher;
+    @BindView(R.id.iv_qrcode)
+    ImageView ivQrcode;
+    @BindView(R.id.sl_encrypt_string)
+    ScrollView slEncryptString;
+    @BindView(R.id.et_plain_text)
+    TextInputEditText etPlainText;
+
+    SpUtil spUtil;
+
+    AES aes;
 
     byte[] result;
+
+    RequestOptions options = new RequestOptions()
+            .priority(Priority.HIGH)
+            .diskCacheStrategy(DiskCacheStrategy.NONE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_encrypt_string);
+        setContentView(R.layout.activity_qr_code);
         ButterKnife.bind(this);
-
-
         init();
         initView();
-
     }
-
-
 
     private void initView() {
 
         toolbar.setNavigationOnClickListener(v -> finish());
-
         RxView.clicks(btCheckKey)
                 .compose(bindToLifecycle())
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
@@ -131,6 +114,7 @@ public class EncryptStringActivity extends RxActivity {
                         btCheckKey.setEnabled(true);
                     }
                 });
+
 
 
         RxView.clicks(btEncrypt)
@@ -177,8 +161,11 @@ public class EncryptStringActivity extends RxActivity {
                                 if (bytes == null) {
                                     Snackbar.make(slEncryptString, "请输入明文", Snackbar.LENGTH_SHORT).show();
                                 }
+
                                 result = ArrayUtils.toPrimitive(bytes);
+
                                 Log.d("encrypted", toHexString(result));
+
 
                                 setCipherText();
 
@@ -213,123 +200,15 @@ public class EncryptStringActivity extends RxActivity {
                 });
 
 
-        RxView.clicks(cbSetAscii)
-                .compose(bindToLifecycle())
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .subscribe(new Observer<Object>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-                        if (cbSetAscii.isChecked()) {
-                            etCipherText.setText(new String(result));
-                        } else {
-                            etCipherText.setText(toHexString(result));
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-
-        RxView.clicks(cbToBase64)
-                .compose(bindToLifecycle())
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .subscribe(new Observer<Object>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-                        setCipherText();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-        RxView.clicks(btCopyCipher)
-                .compose(bindToLifecycle())
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .subscribe(new Observer<Object>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-
-                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                        String content;
-                        if (cbToBase64.isChecked()) {
-                            content = Base64.encodeToString(result, Base64.DEFAULT);
-                        } else {
-                            if (cbSetAscii.isChecked()) {
-                                content = new String(result);
-                            } else {
-                                content = toHexString(result);
-                            }
-                        }
-
-                        ClipData mClipData = ClipData.newPlainText("Cipher Text", content);
-                        cm.setPrimaryClip(mClipData);
-
-                        Snackbar.make(slEncryptString, "已将密文复制到剪贴板", Snackbar.LENGTH_SHORT).show();
-
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
     }
 
     private void setCipherText() {
-        if (result == null) {
-            return;
-        }
-        if (cbToBase64.isChecked()) {
-            cbSetAscii.setEnabled(false);
-            etCipherText.setText(Base64.encodeToString(result, Base64.DEFAULT));
-        } else {
-            cbSetAscii.setEnabled(true);
-            if (cbSetAscii.isChecked()) {
-                etCipherText.setText(new String(result));
-            } else {
-                etCipherText.setText(toHexString(result));
-            }
-        }
+
+        byte[] qrcodeByte = ZxingUtil.createBitmap(toHexString(result));
+
+        Glide.with(this).load(qrcodeByte).apply(options).into(ivQrcode);
+
+
 
     }
 
@@ -346,14 +225,15 @@ public class EncryptStringActivity extends RxActivity {
 
         byte[] plainBytes;
 
-        if (cbByteString.isChecked()) {
-            plainBytes = Base64.decode(etPlainText.getText().toString(), Base64.DEFAULT);
-        } else {
-            plainBytes = etPlainText.getText().toString().getBytes();
-        }
+
+        plainBytes = Objects.requireNonNull(etPlainText.getText()).toString().getBytes();
+
+
+
 
 
         if (etIv.getText() != null) {
+
 
 
             byte[] iv = ivSetter(etIv.getText().toString(), cbIvPadding.isChecked());
@@ -361,14 +241,14 @@ public class EncryptStringActivity extends RxActivity {
             return ArrayUtils.toObject(whiteBoxAESEncrypt(aes, plainBytes, iv));
 
 
-        } else {
+        }else {
             return null;
         }
 
 
+
+
     }
-
-
     private void init() {
         spUtil = new SpUtil(this);
 
@@ -387,7 +267,9 @@ public class EncryptStringActivity extends RxActivity {
 
         checkKey();
 
+
     }
+
 
     private void checkKey() {
 
@@ -475,6 +357,4 @@ public class EncryptStringActivity extends RxActivity {
                     }
                 });
     }
-
-
 }

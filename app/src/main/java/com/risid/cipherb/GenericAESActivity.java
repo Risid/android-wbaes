@@ -1,6 +1,10 @@
 package com.risid.cipherb;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -8,13 +12,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.journeyapps.barcodescanner.CaptureActivity;
 import com.trello.rxlifecycle3.components.RxActivity;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -30,6 +41,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 import static com.risid.cipherb.AESUtil.genericDecrypt;
 import static com.risid.cipherb.AESUtil.genericEncrypt;
 import static com.risid.cipherb.AESUtil.ivSetter;
@@ -71,6 +83,8 @@ public class GenericAESActivity extends RxActivity {
     ScrollView slEncryptString;
     @BindView(R.id.pb_decrypt)
     ProgressBar pbDecrypt;
+    @BindView(R.id.tv_qrcode)
+    TextView tvQrcode;
 
 
     @Override
@@ -82,11 +96,72 @@ public class GenericAESActivity extends RxActivity {
         initView();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            String scanResult = "";
+            if (resultCode == RESULT_OK) {
+                // 扫描得到二维码链接
+                IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                if (intentResult != null) {
+                    if (intentResult.getContents() != null) {
+                        // ScanResult 为获取到的字符串
+                        scanResult = intentResult.getContents();
+
+                    }
+                }
+            }
+            if (!scanResult.equals("")) {
+                Toast.makeText(this, scanResult, Toast.LENGTH_SHORT).show();
+                Log.d("qrcode", scanResult);
+                etCipherText.setText(scanResult);
+                cbToBase64.setChecked(false);
+                decrypt();
+            }
+
+        }
+    }
     private void initView() {
 
 
 
         toolbar.setNavigationOnClickListener(v -> finish());
+
+
+        RxView.clicks(tvQrcode)
+                .compose(bindToLifecycle())
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                        if (ContextCompat.checkSelfPermission(GenericAESActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(GenericAESActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+                        } else {
+                            Intent intent = new Intent(GenericAESActivity.this, CaptureActivity.class);
+
+
+                            startActivityForResult(intent, 0);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
         RxView.clicks(btEncrypt)
                 .compose(bindToLifecycle())
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
@@ -101,7 +176,20 @@ public class GenericAESActivity extends RxActivity {
 
                         Observable<Byte[]> encryptObservable = Observable.create((ObservableOnSubscribe<Byte[]>) emitter -> {
 
-                            emitter.onNext(encrypt());
+                            if (etPlainText.getText() == null || TextUtils.isEmpty(etPlainText.getText())) {
+                                emitter.onError(new Exception("请填写明文"));
+                                return;
+                            }
+                            if (etKey.getText() == null || TextUtils.isEmpty(etKey.getText())) {
+                                emitter.onError(new Exception("请填写密钥"));
+                                return;
+                            }
+                            Byte[] bytes = encrypt();
+                            if(bytes == null){
+                                emitter.onError(new Exception("加密错误"));
+                            }else {
+                                emitter.onNext(bytes);
+                            }
                             emitter.onComplete();
 
 
@@ -115,9 +203,7 @@ public class GenericAESActivity extends RxActivity {
 
                             @Override
                             public void onNext(Byte[] bytes) {
-                                if (bytes == null) {
-                                    Snackbar.make(slEncryptString, "加密错误", Snackbar.LENGTH_SHORT).show();
-                                }
+
                                 cipher = ArrayUtils.toPrimitive(bytes);
                                 Log.d("encrypted", toHexString(cipher));
                                 if (cbToBase64.isChecked()) {
@@ -130,6 +216,9 @@ public class GenericAESActivity extends RxActivity {
 
                             @Override
                             public void onError(Throwable e) {
+
+                                btEncrypt.setVisibility(View.VISIBLE);
+                                Snackbar.make(slEncryptString, e.getMessage(), Snackbar.LENGTH_SHORT).show();
 
                             }
 
@@ -167,7 +256,20 @@ public class GenericAESActivity extends RxActivity {
 
                         Observable<Byte[]> encryptObservable = Observable.create((ObservableOnSubscribe<Byte[]>) emitter -> {
 
-                            emitter.onNext(decrypt());
+                            if (etCipherText.getText() == null || TextUtils.isEmpty(etCipherText.getText())) {
+                                emitter.onError(new Exception("请填写密文"));
+                                return;
+                            }
+                            if (etKey.getText() == null || TextUtils.isEmpty(etKey.getText())) {
+                                emitter.onError(new Exception("请填写密钥"));
+                                return;
+                            }
+                            Byte[] bytes = decrypt();
+                            if(bytes == null){
+                                emitter.onError(new Exception("解密错误"));
+                            }else {
+                                emitter.onNext(bytes);
+                            }
                             emitter.onComplete();
 
 
@@ -181,9 +283,7 @@ public class GenericAESActivity extends RxActivity {
 
                             @Override
                             public void onNext(Byte[] bytes) {
-                                if (bytes == null) {
-                                    Snackbar.make(slEncryptString, "解密错误", Snackbar.LENGTH_SHORT).show();
-                                }
+
                                 plain = ArrayUtils.toPrimitive(bytes);
                                 Log.d("decrypted", toHexString(plain));
                                 if (!cbByteString.isChecked()) {
@@ -195,7 +295,9 @@ public class GenericAESActivity extends RxActivity {
 
                             @Override
                             public void onError(Throwable e) {
+                                btDecrypt.setVisibility(View.VISIBLE);
 
+                                Snackbar.make(slEncryptString, e.getMessage(), Snackbar.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -222,7 +324,6 @@ public class GenericAESActivity extends RxActivity {
 
         RxView.clicks(cbToBase64)
                 .compose(bindToLifecycle())
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Observer<Object>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -232,7 +333,7 @@ public class GenericAESActivity extends RxActivity {
                     @Override
                     public void onNext(Object o) {
                         cbToBase64.setEnabled(false);
-                        if (cbToBase64.isChecked()){
+                        if (cbToBase64.isChecked() && cipher != null){
 
                             etCipherText.setText(Base64.encodeToString(cipher, Base64.DEFAULT));
                         }else {
@@ -258,9 +359,7 @@ public class GenericAESActivity extends RxActivity {
 
     private Byte[] encrypt() {
 
-        if (etPlainText.getText() == null || etPlainText.getText().toString().trim().equals("")) {
-            return null;
-        }
+
 
         byte[] plainBytes;
 
@@ -270,11 +369,11 @@ public class GenericAESActivity extends RxActivity {
             plainBytes = etPlainText.getText().toString().getBytes();
         }
 
-        if (etIv.getText() != null && !etIv.getText().toString().trim().equals("")) {
+        if (etIv.getText() != null) {
 
 
             byte[] iv = ivSetter(etIv.getText().toString(), cbIvPadding.isChecked());
-            if (etKey.getText() != null && !etKey.getText().toString().trim().equals("")) {
+            if (etKey.getText() != null) {
                 byte[] key;
                 if (cbKeyString.isChecked()) {
                     key = ivSetter(new String(toByteArray(etKey.getText().toString().trim())), false);
@@ -291,9 +390,6 @@ public class GenericAESActivity extends RxActivity {
     }
 
     private Byte[] decrypt() {
-        if (etCipherText.getText() == null || etCipherText.getText().toString().trim().equals("")) {
-            return null;
-        }
 
         byte[] cipherBytes;
 
@@ -307,7 +403,7 @@ public class GenericAESActivity extends RxActivity {
 
 
             byte[] iv = ivSetter(etIv.getText().toString(), cbIvPadding.isChecked());
-            if (etKey.getText() != null && !etKey.getText().toString().trim().equals("")) {
+            if (etKey.getText() != null) {
                 byte[] key;
                 if (cbKeyString.isChecked()) {
                     key = ivSetter(new String(toByteArray(etKey.getText().toString().trim())), false);

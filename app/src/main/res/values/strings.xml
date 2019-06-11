@@ -33,4 +33,9 @@
     <string name="encrypted_request">加密后的请求参数：</string>
     <string name="list_decrypted">服务器解密后获得的参数列表：</string>
     <string name="send_encrypted_request">发送加密的http请求</string>
+    <string name="choose_file">选择文件</string>
+    <string name="file_path">欲加密的文件地址：</string>
+    <string name="save_to">保存到：</string>
+    <string name="generate_qrcode">生成二维码</string>
+    <string name="refresh_per_min">每分钟刷新一次</string>
 </resources>

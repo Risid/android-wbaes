@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".EncryptedFileActivity">
+    tools:context=".QrCodeActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -49,75 +49,40 @@
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:id="@+id/bt_encrypt"
-                        android:text="@string/wb_encrypt_file"/>
+                        android:text="@string/generate_qrcode"/>
                 </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-
                 style="@style/LayoutList">
 
-                <TextView
-                    style="@style/StrongText"
-
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:text="@string/file_path"/>
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_file_path"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    android:layout_marginTop="20dp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
+                    <TextView
+                        style="@style/StrongText"
 
-
-                    android:textColor="@color/colorPrimaryDark"
-
-                    android:background="@drawable/order_edt_note_bg"
-                    />
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:id="@+id/bt_choose_file"
-                    android:text="@string/choose_file"/>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-
-                style="@style/LayoutList">
-
-                <TextView
-                    style="@style/StrongText"
-
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:text="@string/save_to"/>
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_save_file"
-                    android:layout_width="match_parent"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:layout_height="40dp"
-                    android:paddingStart="5dp"
-                    android:layout_marginTop="20dp"
-                    android:paddingEnd="5dp"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:text="@string/plain_text"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_plain_text"
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:layout_height="40dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
 
 
-                    android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDark"
 
-                    android:background="@drawable/order_edt_note_bg"
-                    />
+                        android:background="@drawable/order_edt_note_bg"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
             <LinearLayout
@@ -158,6 +123,28 @@
                     android:id="@+id/cb_iv_padding"
                     android:text="@string/iv_padding"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:id="@+id/iv_qrcode"
+                    android:src="@color/colorAccent"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    style="@style/StrongText"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_cipher"/>
+            </LinearLayout>
+
 
 
 
