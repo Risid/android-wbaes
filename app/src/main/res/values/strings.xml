@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CipherB</string>
+    <string name="app_name">AES白盒箱</string>
     <string name="wbaes_test">白盒AES加密</string>
     <string name="wb_encrypt_string">加密字符串(A)</string>
     <string name="wb_encrypt_file">加密文件(A)</string>

@@ -24,7 +24,7 @@ public class ApiManager {
     }
     public RetrofitService getOrderApi(String url) {
 
-        if (orderApi == null || url.equals(baseUrl)) {
+        if (orderApi == null || !url.equals(baseUrl)) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

@@ -42,9 +42,20 @@ public class AboutActivity extends FragmentActivity {
         licenseIds.add(LicenseID.OKHTTP);
         ArrayList<License> customLicenses = new ArrayList<>();
 
-        customLicenses.add(new License(this, "RxJava", LicenseType.APACHE_LICENSE_20, "2004", "RxJava"));
+        customLicenses.add(new License(this, "RxLifecycle3", LicenseType.APACHE_LICENSE_20, "2016", "trello"));
 
-        customLicenses.add(new License(this, "RxJava", LicenseType.APACHE_LICENSE_20, "2004", "RxJava"));
+        customLicenses.add(new License(this, "RxJava", LicenseType.APACHE_LICENSE_20, "2016-present", "RxJava Contributors"));
+
+
+        customLicenses.add(new License(this, "ZXing", LicenseType.APACHE_LICENSE_20, "2014", "ZXing"));
+
+        customLicenses.add(new License(this, "Glide", LicenseType.BSD_3_CLAUSE, "2014", "Google"));
+
+        customLicenses.add(new License(this, "Butter Knife", LicenseType.APACHE_LICENSE_20, "2013", "Jake Wharton"));
+
+
+        customLicenses.add(new License(this, "Bouncy Castle", LicenseType.MIT_LICENSE, "2000-2019", "The Legion of the Bouncy Castle Inc."));
+
         RecyclerViewLicenseFragment fragment = RecyclerViewLicenseFragment.newInstance(licenseIds);
         fragment.addCustomLicense(customLicenses);
         CustomUI customUI = new CustomUI()                          // Create Customize UI from CustomUI class
